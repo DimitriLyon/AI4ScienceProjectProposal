@@ -1,0 +1,97 @@
+% Compile with pdfLaTeX (no external files or bibliography processor needed).
+% Keep the submitted proposal to ONE page, including references.
+\documentclass[11pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{newtxtext,newtxmath}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{ProposalBlue}{HTML}{40619F}
+\definecolor{SecondaryText}{HTML}{555555}
+\hypersetup{colorlinks=true,urlcolor=ProposalBlue,linkcolor=ProposalBlue,
+  pdfauthor={},pdftitle={New-Idea Proposal for a Paper Presentation}}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{1em}
+\titleformat{\section}{\normalfont\bfseries\color{ProposalBlue}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{7pt}{2pt}
+\newcommand{\proposalheader}[4]{%
+  {\small\sffamily\bfseries\color{ProposalBlue}
+   PAPER PRESENTATION\enspace\textbullet\enspace NEW-IDEA PROPOSAL}\par
+  \vspace{3pt}
+  {\fontsize{16}{18}\selectfont\bfseries #1\par}
+  \vspace{4pt}
+  \textbf{Student(s):} #2\hfill\textbf{Presentation:} #3\par
+  \textbf{Based on:} #4\par
+  \vspace{3pt}
+  {\color{ProposalBlue}\hrule height 0.6pt}
+  \vspace{4pt}
+}
+\newcommand{\guide}[1]{{\color{SecondaryText}#1}}
+\newcommand{\wordbudget}[1]{{\normalfont\small\color{SecondaryText}\hfill #1 words}}
+\newcommand{\referencesheading}{%
+  \par\vspace{4pt}
+  {\color{ProposalBlue}\hrule height 0.4pt}
+  \vspace{3pt}
+}
+
+\begin{document}
+\proposalheader{[Specific title of your proposed research idea]}
+  {[Your name(s)]}{[Date]}
+  {[Paper title, authors, and year]}
+
+\guide{\textit{Propose one testable extension of the presented paper, not just a summary.
+Replace the bracketed prompts. Keep one page, including references, with 11-point text
+and the existing margins. Suggested length: 420--520 words.}}
+
+\section*{1. Background and motivation\wordbudget{50--60}}
+[Explain the problem the paper addresses, why it matters, and the main contribution
+that your idea builds on. Give enough context for a classmate who has not read the
+paper. Cite the relevant method or result; do not summarize every section.]
+
+\section*{2. Gap and research question\wordbudget{50--60}}
+[Identify one limitation, missing comparison, or untested assumption. Point to a
+specific section, figure, experiment, or equation when possible. Distinguish the
+paper's stated limitation from your own observation. End with one focused question:
+``Can [specific change] improve [outcome] under [conditions]?'' Explain why answering
+this question is worthwhile.]
+
+\section*{3. Proposed idea and novelty\wordbudget{110--140}}
+[Describe exactly what you will change and what stays the same. Explain the inputs,
+the main steps, and the expected output. Include a short concrete example or a small
+equation only if it makes the idea clearer. Explain why the change might address the
+gap. State how it differs from the original paper; do not present an existing paper
+component as your new contribution. A modest, well-defined extension is sufficient.
+Check related work before claiming broader novelty.]
+
+\section*{4. Evaluation plan\wordbudget{120--140}}
+[Name the task, dataset or test cases, model, and a feasible pilot size. Compare with
+the original method and at least one simple alternative. Identify the main metric
+and a concrete success criterion. State which resources and settings must be matched
+for a fair comparison. Include one ablation that removes your proposed component.
+Keep development and test examples separate. Explain how you will handle variability,
+cost, failures, and an inconclusive result. For a theoretical idea, specify the claim,
+assumptions, and proof or counterexample strategy instead.]
+
+\section*{5. Expected outcomes and risks\wordbudget{50--70}}
+[State your hypothesis, not invented results. Explain where the idea should help,
+one plausible reason it could fail, and a fallback or diagnostic test. Say what a
+negative result would teach us. Make clear which numerical values are goals rather
+than observed improvements.]
+
+\section*{6. Feasibility and deliverables\wordbudget{40--50}}
+[Give a short schedule, required data or computing resources, and the smallest
+version you could realistically test. Name the deliverables, such as a prototype,
+comparison plot, proof sketch, or error analysis. Separate the essential pilot from
+optional extensions.]
+
+\vfill
+\referencesheading
+{\small\textbf{References.} [1] [Authors. \textit{Presented paper title}. Venue/year.
+\href{https://example.com}{Paper link}.] [2] [Closest related work, if needed.]\par}
+\end{document}

@@ -1,0 +1,105 @@
+% Compile with pdfLaTeX (no external files or bibliography processor needed).
+% Keep the submitted proposal to ONE page, including references.
+\documentclass[11pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{newtxtext,newtxmath}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{ProposalBlue}{HTML}{40619F}
+\definecolor{SecondaryText}{HTML}{555555}
+\hypersetup{colorlinks=true,urlcolor=ProposalBlue,linkcolor=ProposalBlue,
+  pdfauthor={},pdftitle={New-Idea Proposal for a Paper Presentation}}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{1em}
+\titleformat{\section}{\normalfont\bfseries\color{ProposalBlue}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{7pt}{2pt}
+\newcommand{\proposalheader}[4]{%
+  {\small\sffamily\bfseries\color{ProposalBlue}
+   PAPER PRESENTATION\enspace\textbullet\enspace NEW-IDEA PROPOSAL}\par
+  \vspace{3pt}
+  {\fontsize{16}{18}\selectfont\bfseries #1\par}
+  \vspace{4pt}
+  \textbf{Student(s):} #2\hfill\textbf{Presentation:} #3\par
+  \textbf{Based on:} #4\par
+  \vspace{3pt}
+  {\color{ProposalBlue}\hrule height 0.6pt}
+  \vspace{4pt}
+}
+\newcommand{\guide}[1]{{\color{SecondaryText}#1}}
+\newcommand{\wordbudget}[1]{{\normalfont\small\color{SecondaryText}\hfill #1 words}}
+\newcommand{\referencesheading}{%
+  \par\vspace{4pt}
+  {\color{ProposalBlue}\hrule height 0.4pt}
+  \vspace{3pt}
+}
+
+\begin{document}
+\proposalheader{Question-Guided Worker Activation for MPLMs}
+  {[Your name(s)]}{[Date]}
+  {Liu et al., \textit{Message Passing Enables Efficient Reasoning} (2026) [1]}
+
+\guide{\textit{Illustrative research extension; the experiments below are proposed, not completed.}}
+
+\section*{1. Background and motivation}
+Liu et al. introduce Message Passing Language Models (MPLMs), in which persistent
+LLM threads exchange messages. In their long-context question-answering setup,
+the parent launches workers for all document chunks, receives summaries, and then
+requests evidence from selected workers [1, Sec.~5.3]. This motivates a cost question:
+must every chunk be processed by an LLM before targeted reasoning begins?
+
+\section*{2. Gap and research question}
+Selective follow-up happens after the initial workers have processed their chunks.
+When evidence lies in only a few chunks, this initial pass may be avoidable. I ask
+whether choosing which workers to activate, rather than only whom to query later,
+can reduce inference cost without missing evidence spread across documents.
+
+\section*{3. Proposed idea and novelty}
+I propose to rank chunks by keyword overlap with the question and initially activate
+only the top two. These workers retain their contexts and use the existing message
+protocol. If the parent identifies an unanswered subquestion, it reranks unopened
+chunks using that subquestion and activates two more. Previously opened workers
+remain available for follow-up. Expansion continues until the parent answers or a
+shared generation budget is exhausted; unresolved questions can eventually trigger
+full coverage. The added component is \emph{question-guided worker creation before LLM
+processing}, not selective messaging itself. For example, a date lookup could start
+with two relevant chunks instead of summarizing twenty.
+
+\section*{4. Evaluation plan}
+I will use Qwen3-30B-A3B, with 20 LongBench-v2 questions for development and 100
+disjoint pilot-test questions sampled across task types and context lengths.
+Compare original all-worker MPLM, fixed top-two activation, the proposed method,
+and an ablation that opens chunks in random order. Hold model, chunking, decoding,
+generation budget, maximum concurrency, and cache policy fixed. Measure answer
+accuracy, mean wall-clock latency, processed input tokens, generated tokens, and
+workers opened, including routing and retries. Run three seeds and report paired
+confidence intervals. The pilot target is at least 20\% lower latency than all-worker
+MPLM with accuracy within five percentage points; inconclusive intervals will be
+reported as such.
+
+\section*{5. Expected outcomes and risks}
+I expect the largest savings when evidence is localized. Paraphrases and multi-hop
+questions may defeat keyword ranking, while sequential expansion may erase the
+benefit of fewer workers. Broader expansion is a fallback, not a correctness
+guarantee. A negative result would help identify when processing every chunk at
+the start is worth its cost.
+
+\section*{6. Feasibility and deliverables}
+Week 1: reproduce the baseline, check related work on retrieval-based routing,
+and implement activation. Week 2: run the pilot and analyze missed-evidence errors.
+Use a shared inference server without fine-tuning. Deliver a controller patch,
+evaluation script, latency--accuracy plot, and representative failure cases.
+
+\vfill
+\referencesheading
+{\small\textbf{Reference.} [1] X. Liu, D. Arora, G. Swamy, and A. Zanette.
+\textit{Message Passing Enables Efficient Reasoning}. 2026.
+\href{https://openreview.net/pdf?id=X5TrciQRnV}{OpenReview};
+\href{https://arxiv.org/pdf/2607.01077}{arXiv full text}, Secs.~3 and 5.3.\par}
+\end{document}
